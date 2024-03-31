@@ -5,12 +5,14 @@ const {
   UpdateUser,
   DeleteUser,
   getUserId,
-  loginUser
+  loginUser,
+  registerUser,
+  changepassword
 } = require("../controller/user");
+const checkAuth = require('../middleware/auth-check')
 const { Router } = require("express");
 const router = Router();
 
-router.route("").get(GetUser);
 router.route("").post(
   check("title", "title is required and should be between 3 to 30 characters")
     .notEmpty()
@@ -35,10 +37,12 @@ router.route("").post(
   check("price", "price is required and should be number").isNumeric(),
   CreateUser
 );
-router.route("/:id").get(getUserId);
-router.route("/:id").put(UpdateUser);
-router.route("/:id").delete(DeleteUser);
+router.get("/users", checkAuth, GetUser);
+router.get("/:id", checkAuth, getUserId);
+router.put("/:id", checkAuth, UpdateUser);
+router.delete("/:id", checkAuth, DeleteUser);
 router.post("/login", loginUser);
 router.post("/register", registerUser);
+router.post("/changepassword", checkAuth, changepassword);
 
 module.exports = router;

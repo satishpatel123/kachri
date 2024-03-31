@@ -4,36 +4,20 @@ const {
   GetProducts,
   UpdateProducts,
   DeleteProduct,
+  getProductId,
 } = require("../controller/product");
 const { Router } = require("express");
+const checkAuth = require('../middleware/auth-check');
+const uploadMiddleware = require('../middleware/multipleimage');
+const storage = require('../middleware/image');
 const router = Router();
+const multer = require('multer');
+const upload = multer({ storage: storage });
 
-router.route("").get(GetProducts);
-router.route("").post(
-  check("title", "title is required and should be between 3 to 30 characters")
-    .notEmpty()
-    .isLength({
-      min: 3,
-      max: 30,
-    }),
-  check(
-    "description",
-    "description is required and should be between 3 to 30 characters"
-  )
-    .notEmpty()
-    .isLength({
-      min: 3,
-      max: 30,
-    }),
-  check("image", "image is required and should be between 3 to 20 characters")
-    .notEmpty()
-    .isLength({
-      min: 3,
-    }),
-  check("price", "price is required and should be number").isNumeric(),
-  CreateProduct
-);
-router.route("/:id").put(UpdateProducts);
-router.route("/:id").delete(DeleteProduct);
+router.post("/create", checkAuth, upload.any("image"), CreateProduct);
+router.get("", checkAuth, GetProducts);
+router.get("/:id", checkAuth, getProductId);
+router.put("/:id", checkAuth, upload.any("image"), UpdateProducts);
+router.delete("/:id", checkAuth, DeleteProduct);
 
 module.exports = router;

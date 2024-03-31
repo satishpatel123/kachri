@@ -1,5 +1,7 @@
 const { validationResult } = require("express-validator");
 const User = require("../model/user");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 exports.CreateUser = async (req, res, next) => {
   try {
@@ -43,18 +45,11 @@ exports.UpdateUser = async (req, res, next) => {
         error: "Invalid User ID",
       });
     }
-    if (req.body.title) {
-      existedUser.title = req.body.title;
+
+    if (req.body.name) {
+      existedUser.name = req.body.name;
     }
-    if (req.body.description) {
-      existedUser.description = req.body.description;
-    }
-    if (req.body.image) {
-      existedUser.image = req.body.image;
-    }
-    if (req.body.price) {
-      existedUser.price = req.body.price;
-    }
+
     await existedUser.save();
     res.json({
       data: existedUser,
@@ -141,27 +136,17 @@ exports.loginUser = async (req, res, next) => {
   }
 };
 
-exports.loginUser = async (req, res, next) => {
+exports.registerUser = async (req, res, next) => {
   try {
-    const { name, email, password, role, lastname } = req.body;
+    const { name, email, password, role } = req.body;
     if (!req.body.password && !req.body.name && !req.body.email) {
       return res.status(400).json({
         message: "Please Enter name, email and password",
         status_code: 400,
       });
     }
-    const roleName = await roleModel.find({
-      $and: [{ id: role }, { status: true }],
-    });
 
-    if (roleName.length == 0) {
-      return res.status(400).json({
-        message: "Role is not found",
-        status: 400,
-      });
-    }
-
-    const oldUser = await userModel.findOne({ email });
+    const oldUser = await User.findOne({ email });
     const encryptedPassword = await bcrypt.hash(password, 10);
     if (oldUser) {
       return res.status(400).json({
@@ -170,9 +155,8 @@ exports.loginUser = async (req, res, next) => {
       });
     }
 
-    const user = await userModel.create({
+    const user = await User.create({
       name,
-      lastname,
       email: email.toLowerCase(),
       password: encryptedPassword,
       role,
@@ -190,8 +174,45 @@ exports.loginUser = async (req, res, next) => {
       token: token,
     });
   } catch (err) {
+    console.log(err, "----err");
     res.status(500).json({
       error: "something went wrong",
+    });
+  }
+};
+
+exports.changepassword = async (req, res, next) => {
+  try {
+    console.log(req.user.user_id);
+    let existedUser = await User.findById(req.user.user_id);
+    if (!existedUser) {
+      return res.status(404).json({
+        error: "User Not found",
+      });
+    }
+    const {oldpassword, newpassword} = req.body;
+    const match = await bcrypt.compare(oldpassword, existedUser.password);
+    if(match) {
+      const encryptedPassword = await bcrypt.hash(newpassword, 10);
+      if (newpassword) {
+        existedUser.password = encryptedPassword;
+      }
+  
+      await existedUser.save();
+      res.json({
+        message: "Password update has been successfully",
+        success: true,
+      });
+    } else {
+      res.status(200).json({
+        message: "old password does not match",
+        status: false
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      error: "something went wrong",
+      status: false
     });
   }
 };

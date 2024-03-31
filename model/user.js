@@ -6,9 +6,6 @@ const userSchema = new Schema({
   name: {
     type: String,
   },
-  lastname: {
-    type: String,
-  },
   email: {
     type: String,
     required: true,
@@ -18,8 +15,7 @@ const userSchema = new Schema({
     type: String,
   },
   role: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Role",
+    type: String,
   },
 });
 

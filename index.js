@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const productRouter = require("./routes/product");
+const cartRouter = require("./routes/cart");
+const ordersRouter = require("./routes/order");
 const userRouter = require("./routes/user");
 
 const app = express();
@@ -16,6 +18,8 @@ mongoose.connect(process.env.MONGO_URL, {
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/product", productRouter);
+app.use("/cart", cartRouter);
+app.use("/orders", ordersRouter);
 app.use("/user", userRouter);
 app.get("/", (req, res) => {
   res.send("Cart CRUD");
