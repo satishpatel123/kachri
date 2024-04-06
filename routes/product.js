@@ -7,10 +7,9 @@ const {
   getProductId,
 } = require("../controller/product");
 const { Router } = require("express");
-const checkAuth = require('../middleware/auth-check');
-const uploadMiddleware = require('../middleware/multipleimage');
-const storage = require('../middleware/image');
 const router = Router();
+const checkAuth = require('../middleware/auth-check');
+const storage = require('../middleware/image');
 const multer = require('multer');
 const upload = multer({ storage: storage });
 
