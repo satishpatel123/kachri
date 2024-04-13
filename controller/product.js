@@ -10,6 +10,7 @@ exports.CreateProduct = async (req, res, next) => {
       title: req.body.title,
       description: req.body.description,
       price: req.body.price,
+      image: req.files[0].filename,
     }
     let productId = await Product.create(obj);
     if(req.files.length > 0) {
@@ -65,6 +66,8 @@ exports.UpdateProducts = async (req, res, next) => {
     if (req.body.price) {
       existedProduct.price = req.body.price;
     }
+
+    existedProduct.image = req.files[0].filename;
     await existedProduct.save();
     if(req.files && req.files.length > 0) {
       await Image.deleteMany({ product : req.params.id})

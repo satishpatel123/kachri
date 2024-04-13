@@ -14,7 +14,7 @@ const multer = require('multer');
 const upload = multer({ storage: storage });
 
 router.post("/create", checkAuth, upload.any("image"), CreateProduct);
-router.get("", checkAuth, GetProducts);
+router.get("", GetProducts);
 router.get("/:id", checkAuth, getProductId);
 router.put("/:id", checkAuth, upload.any("image"), UpdateProducts);
 router.delete("/:id", checkAuth, DeleteProduct);
