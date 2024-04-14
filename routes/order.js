@@ -12,7 +12,7 @@ const multer = require('multer');
 const upload = multer({ storage: storage });
 
 router.get("/", checkAuth, getOrders);
-router.post("/", upload.none(), checkAuth, createOrder);
+router.post("/", checkAuth, createOrder);
 router.post("/shipping", checkAuth, createOrderShipping);
 
 module.exports = router;
