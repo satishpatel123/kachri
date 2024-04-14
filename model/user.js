@@ -20,6 +20,14 @@ const userSchema = new Schema({
   role: {
     type: String,
   },
+  token: {
+    type: String,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 3600,
+  },
 });
 
 const User = mongoose.model("User", userSchema);

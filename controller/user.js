@@ -3,6 +3,8 @@ const User = require("../model/user");
 const Contact = require("../model/contact");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { sendEmail, tokenGenerator } = require("../utils/comman");
+var CryptoJS = require("crypto-js");
 
 exports.CreateUser = async (req, res, next) => {
   try {
@@ -190,14 +192,14 @@ exports.changepassword = async (req, res, next) => {
         error: "User Not found",
       });
     }
-    const {oldpassword, newpassword} = req.body;
+    const { oldpassword, newpassword } = req.body;
     const match = await bcrypt.compare(oldpassword, existedUser.password);
-    if(match) {
+    if (match) {
       const encryptedPassword = await bcrypt.hash(newpassword, 10);
       if (newpassword) {
         existedUser.password = encryptedPassword;
       }
-  
+
       await existedUser.save();
       res.json({
         message: "Password update has been successfully",
@@ -206,13 +208,13 @@ exports.changepassword = async (req, res, next) => {
     } else {
       res.status(200).json({
         message: "old password does not match",
-        status: false
+        status: false,
       });
     }
   } catch (err) {
     res.status(500).json({
       error: "something went wrong",
-      status: false
+      status: false,
     });
   }
 };
@@ -220,17 +222,17 @@ exports.changepassword = async (req, res, next) => {
 exports.contactUs = async (req, res, next) => {
   try {
     const { name, phoneNumber, email, message } = req.body;
-   
+
     const contact = await Contact.create({
       name,
       phoneNumber,
       email,
       message,
     });
-   return res.status(201).json({
+    return res.status(201).json({
       data: contact,
       status: true,
-      message : "Message Send has been successfully"
+      message: "Message Send has been successfully",
     });
   } catch (err) {
     console.log(err, "----err");
@@ -243,23 +245,50 @@ exports.contactUs = async (req, res, next) => {
 exports.forgetpassword = async (req, res, next) => {
   try {
     const { email } = req.body;
-    let existedUser = await User.findOne({ email : email});
+    let existedUser = await User.findOne({ email: email });
     if (!existedUser) {
       return res.status(404).json({
-        error: "Email User Not found",
+        message: "Email User Not found",
       });
     }
-  
-   return res.status(201).json({
-      data: contact,
+    const token = await tokenGenerator();
+    existedUser.token = token;
+    await existedUser.save();
+    const link = `${process.env.BASE_URL}ResetPassword/${token}`;
+    sendEmail(existedUser.email, link);
+    return res.status(201).json({
       status: true,
-      message : "Message Send has been successfully"
+      message: "Forget password mail Send has been successfully",
     });
   } catch (err) {
     console.log(err, "----err");
     res.status(500).json({
-      error: "something went wrong",
+      message: "something went wrong",
     });
   }
 };
 
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const { password } = req.body;
+    let user = await User.findOne({ token: req.params.token });
+    if (!user) {
+      return res.status(404).json({
+        message: "Invalid link or expired",
+        status: false,
+      });
+    }
+    user.password = await bcrypt.hash(password, 10);
+    user.token = "";
+    await user.save();
+    return res.status(201).json({
+      status: true,
+      message: "password reset sucessfully has been successfully",
+    });
+  } catch (err) {
+    console.log(err, "----err");
+    res.status(500).json({
+      message: "something went wrong",
+    });
+  }
+};

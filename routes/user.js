@@ -9,7 +9,8 @@ const {
   registerUser,
   changepassword,
   contactUs,
-  forgetpassword
+  forgetpassword,
+  resetPassword
 } = require("../controller/user");
 const checkAuth = require('../middleware/auth-check')
 const { Router } = require("express");
@@ -48,5 +49,6 @@ router.post("/register", registerUser);
 router.post("/changepassword", checkAuth, changepassword);
 router.post("/contactUs", contactUs);
 router.post("/forgetpassword", forgetpassword);
+router.post("/resetPassword/:token", resetPassword);
 
 module.exports = router;
