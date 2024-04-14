@@ -45,6 +45,7 @@ exports.GetProducts = async (req, res, next) => {
           description: element.description,
           price: element.price,
           image: process.env.URL + element.image,
+          _id: element._id,
         });
       });
     }
