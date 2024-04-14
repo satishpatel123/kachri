@@ -6,13 +6,16 @@ const addressSchema = new Schema({
   city: {
     type: String,
   },
-  customerName: {
+  name: {
     type: String,
   },
-  mobile: {
+  email: {
     type: String,
   },
-  pincode: {
+  phoneNumber: {
+    type: String,
+  },
+  pinCode: {
     type: String,
   },
   state: {
@@ -23,7 +26,7 @@ const addressSchema = new Schema({
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: "User",
   },
 });
 
