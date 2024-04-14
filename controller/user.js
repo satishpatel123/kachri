@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const User = require("../model/user");
+const Contact = require("../model/contact");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -183,7 +184,6 @@ exports.registerUser = async (req, res, next) => {
 
 exports.changepassword = async (req, res, next) => {
   try {
-    console.log(req.user.user_id);
     let existedUser = await User.findById(req.user.user_id);
     if (!existedUser) {
       return res.status(404).json({
@@ -216,3 +216,50 @@ exports.changepassword = async (req, res, next) => {
     });
   }
 };
+
+exports.contactUs = async (req, res, next) => {
+  try {
+    const { name, phoneNumber, email, message } = req.body;
+   
+    const contact = await Contact.create({
+      name,
+      phoneNumber,
+      email,
+      message,
+    });
+   return res.status(201).json({
+      data: contact,
+      status: true,
+      message : "Message Send has been successfully"
+    });
+  } catch (err) {
+    console.log(err, "----err");
+    res.status(500).json({
+      error: "something went wrong",
+    });
+  }
+};
+
+exports.forgetpassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    let existedUser = await User.findOne({ email : email});
+    if (!existedUser) {
+      return res.status(404).json({
+        error: "Email User Not found",
+      });
+    }
+  
+   return res.status(201).json({
+      data: contact,
+      status: true,
+      message : "Message Send has been successfully"
+    });
+  } catch (err) {
+    console.log(err, "----err");
+    res.status(500).json({
+      error: "something went wrong",
+    });
+  }
+};
+

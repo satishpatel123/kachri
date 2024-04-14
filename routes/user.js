@@ -7,7 +7,9 @@ const {
   getUserId,
   loginUser,
   registerUser,
-  changepassword
+  changepassword,
+  contactUs,
+  forgetpassword
 } = require("../controller/user");
 const checkAuth = require('../middleware/auth-check')
 const { Router } = require("express");
@@ -44,5 +46,7 @@ router.delete("/:id", checkAuth, DeleteUser);
 router.post("/login", loginUser);
 router.post("/register", registerUser);
 router.post("/changepassword", checkAuth, changepassword);
+router.post("/contactUs", contactUs);
+router.post("/forgetpassword", forgetpassword);
 
 module.exports = router;
