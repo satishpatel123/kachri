@@ -7,6 +7,8 @@ const orderSchema = new Schema({
     {
       productId: String,
       title:String,
+      image:String,
+      description: String,
       quantity: Number,
       price: Number,
     }
@@ -18,7 +20,9 @@ const orderSchema = new Schema({
   price: {
     type: Number
   },
-
+  orderDate: {
+    type: Date,
+  }
 });
 
 const Cart = mongoose.model("Order", orderSchema);

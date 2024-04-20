@@ -3,6 +3,7 @@ const Address = require("../model/address");
 
 exports.createOrder = async (req, res, next) => {
   try {
+    console.log(req.body, '--req.body')
     const newAddress = await Address.create({
       ...req.body.address,
       userId: req.user.user_id,
@@ -12,50 +13,14 @@ exports.createOrder = async (req, res, next) => {
       products: req.body.products,
       price: req.body.total,
       addressId: newAddress._id,
+      orderDate: new Date()
     });
     res.status(200).json({
       message: "order created successfully",
       order: order,
       status: true,
     });
-    // if (req.body.products && req.body.products.length > 0) {
-    //   let products = [];
-    //   let price = 0;
-    //   let key = 0;
-    //   for (const product of req.body.products) {
-    //     if (product.productId) {
-    //       let getProduct = await Product.findById(product.productId);
-    //       if (getProduct) {
-    //         products.push({
-    //           productId: getProduct._id,
-    //           quantity: req.body.products[key].quantity,
-    //           price: getProduct.price * req.body.products[key].quantity,
-    //           title: getProduct.title,
-    //         });
-    //         price += getProduct.price * parseInt(req.body.products[key].quantity);
-    //       }
-    //       key++;
-    //     }
-    //   }
-    //   const newCart = await Order.create({
-    //     userId: req.user.user_id,
-    //     products: products,
-    //     price: price,
-    //   });
-
-    //   res.json({
-    //     data: newCart,
-    //     message: "Order has been successfully",
-    //     status: true,
-    //   });
-    // } else {
-    //   res.status(200).json({
-    //     message: "Product Not found",
-    //     staus: false,
-    //   });
-    // }
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       message: "something went wrong",
     });
