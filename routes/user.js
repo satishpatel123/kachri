@@ -16,30 +16,7 @@ const checkAuth = require('../middleware/auth-check')
 const { Router } = require("express");
 const router = Router();
 
-router.route("").post(
-  check("title", "title is required and should be between 3 to 30 characters")
-    .notEmpty()
-    .isLength({
-      min: 3,
-      max: 30,
-    }),
-  check(
-    "description",
-    "description is required and should be between 3 to 30 characters"
-  )
-    .notEmpty()
-    .isLength({
-      min: 3,
-      max: 30,
-    }),
-  check("image", "image is required and should be between 3 to 20 characters")
-    .notEmpty()
-    .isLength({
-      min: 3,
-    }),
-  check("price", "price is required and should be number").isNumeric(),
-  CreateUser
-);
+router.get("/", CreateUser);
 router.get("/users", checkAuth, GetUser);
 router.get("/:id", checkAuth, getUserId);
 router.put("/:id", checkAuth, UpdateUser);

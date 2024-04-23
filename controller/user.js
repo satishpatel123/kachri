@@ -111,14 +111,14 @@ exports.DeleteUser = async (req, res, next) => {
 exports.loginUser = async (req, res, next) => {
   try {
     console.log(req.body);
-    const { email, password } = req.body;
-    if (!email && !password) {
-      res.status(400).send("Please enter email and password");
+    const { phoneNumber, password } = req.body;
+    if (!phoneNumber && !password) {
+      res.status(400).send("Please enter mobile number and password");
     }
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ phoneNumber });
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign(
-        { user_id: user._id, email },
+        { user_id: user._id, phoneNumber, email : user.email },
         process.env.TOKEN_KEY,
         {
           expiresIn: "10h",
@@ -141,10 +141,10 @@ exports.loginUser = async (req, res, next) => {
 
 exports.registerUser = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
-    if (!req.body.password && !req.body.name && !req.body.email) {
+    const { name, email, password, role, phoneNumber } = req.body;
+    if (!req.body.password && !req.body.name && !req.body.email && !req.body.phoneNumber) {
       return res.status(400).json({
-        message: "Please Enter name, email and password",
+        message: "Please Enter name, email, phoneNumber and password",
         status_code: 400,
       });
     }
@@ -158,15 +158,23 @@ exports.registerUser = async (req, res, next) => {
       });
     }
 
+    const oldphoneNumber = await User.findOne({ phoneNumber });
+    if (oldphoneNumber) {
+      return res.status(400).json({
+        message: "Phone Number is allready exist",
+        status: 400,
+      });
+    }
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       password: encryptedPassword,
       role,
+      phoneNumber,
     });
 
     const token = jwt.sign(
-      { user_id: user._id, email },
+      { user_id: user._id, email, phoneNumber },
       process.env.TOKEN_KEY,
       {
         expiresIn: "10h",
