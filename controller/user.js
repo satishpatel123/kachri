@@ -12,6 +12,21 @@ exports.CreateUser = async (req, res, next) => {
     if (!result.isEmpty()) {
       return res.json(result);
     } else {
+      let mobielNo = req.body.phoneNumber;
+      const phoneNumber = await User.findOne({ phoneNumber : mobielNo });
+      if(phoneNumber) {
+        return res.status(404).json({
+          error: "Phone Number is allready exist",
+        });
+      }
+
+      let resEmail = req.body.email;
+      const email = await User.findOne({ email : resEmail });
+      if(email) {
+        return res.status(404).json({
+          error: "Email is allready exist",
+        });
+      }
       const user = new User(req.body);
       await user.save();
       res.json({
