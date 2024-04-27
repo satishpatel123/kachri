@@ -277,7 +277,7 @@ exports.forgetpassword = async (req, res, next) => {
     const token = await tokenGenerator();
     existedUser.token = token;
     await existedUser.save();
-    const link = `https://www.kachari.in/ResetPassword/${token}`;
+    const link = `https://www.kachari.in/resetPassword/${token}`;
     sendEmail(existedUser.email, link);
     return res.status(201).json({
       status: true,
