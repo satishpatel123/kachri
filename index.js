@@ -7,6 +7,7 @@ const productRouter = require("./routes/product");
 const cartRouter = require("./routes/cart");
 const ordersRouter = require("./routes/order");
 const userRouter = require("./routes/user");
+const path = require('path')
 
 const app = express();
 // connection with mongoose
@@ -15,7 +16,8 @@ mongoose.connect(process.env.MONGO_URL, {
   useUnifiedTopology: true,
 });
 
-app.use(express.static("uploads"));
+// app.use(express.static("uploads"));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 app.all('/*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
