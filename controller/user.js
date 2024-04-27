@@ -134,7 +134,7 @@ exports.loginUser = async (req, res, next) => {
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign(
         { user_id: user._id, phoneNumber, email : user.email },
-        process.env.TOKEN_KEY,
+        "hFB4rzSIjqoclVvIANXF5Fj8QWG6GOW6",
         {
           expiresIn: "10h",
         }
@@ -146,7 +146,7 @@ exports.loginUser = async (req, res, next) => {
       });
     }
     return res.status(400).send({
-      message: "Invalid email and Password",
+      message: "Invalid phone number and Password",
       status: false,
     });
   } catch (err) {
@@ -190,7 +190,7 @@ exports.registerUser = async (req, res, next) => {
 
     const token = jwt.sign(
       { user_id: user._id, email, phoneNumber },
-      process.env.TOKEN_KEY,
+      "hFB4rzSIjqoclVvIANXF5Fj8QWG6GOW6",
       {
         expiresIn: "10h",
       }
@@ -277,7 +277,7 @@ exports.forgetpassword = async (req, res, next) => {
     const token = await tokenGenerator();
     existedUser.token = token;
     await existedUser.save();
-    const link = `${process.env.BASE_URL}ResetPassword/${token}`;
+    const link = `https://www.kachari.in/ResetPassword/${token}`;
     sendEmail(existedUser.email, link);
     return res.status(201).json({
       status: true,

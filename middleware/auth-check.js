@@ -13,7 +13,7 @@ const verifyToken = (req, res, next) => {
     }
     try {
       const tokens = token.split(' ')[1];
-      const decoded = jwt.verify(tokens, config.TOKEN_KEY);
+      const decoded = jwt.verify(tokens, "hFB4rzSIjqoclVvIANXF5Fj8QWG6GOW6");
       req.user = decoded;
     } catch (err) {
       return res.status(401).send({
