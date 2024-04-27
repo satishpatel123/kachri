@@ -12,7 +12,7 @@ const path = require("path");
 const app = express();
 // connection with mongoose
 mongoose.connect(
-  "mongodb+srv://akshay:jpDi2p0y6hs4Jci3@cluster0.hj3jxmp.mongodb.net/kachari",
+  "mongodb+srv://akshay:jpDi2p0y6hs4Jci3@cluster0.hj3jxmp.mongodb.net/Kachari",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
