@@ -2,16 +2,16 @@ const nodemailer = require("nodemailer");
 
 exports.sendEmail = async (email, link) => {
   var transporter = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: "2525",
+    host: "smtp.gmail.com",
+    port: "587",
     auth: {
-      user: "4dfd0a25b4be01",
-      pass: "dc519b7b02bdb2",
+      user: "kachariamardhara@gmail.com",
+      pass: "ulcvhfrvcsxuungw",
     },
   });
 
   const mailOptions = {
-    from: '"Kachari" <kachari@yopmail.com>',
+    from: '"Kachari" <amardharadehydration@gmail.com>',
     to: email,
     subject: "Your password reset link",
     text: `Your text content`,
