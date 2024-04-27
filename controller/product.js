@@ -44,7 +44,7 @@ exports.GetProducts = async (req, res, next) => {
           title: element.title,
           description: element.description,
           price: element.price,
-          image: "https://backend.kachari.in/" + element.image,
+          image: "https://backend.kachari.in/uploads/" + element.image,
           _id: element._id,
         });
       });
