@@ -60,6 +60,45 @@ exports.GetProducts = async (req, res, next) => {
   }
 };
 
+exports.GetAdminProducts = async (req, res, next) => {
+  try {
+    const products = await Product.find();
+    const productsList = [];
+    if (products.length > 0) {
+      products.forEach((element) => {
+        productsList.push({
+          title: element.title,
+          description: element.description,
+          price: element.price,
+          image: element.image,
+          _id: element._id,
+        });
+      });
+    }
+
+    const page = parseInt(req.query.page);
+    const pageSize = parseInt(req.query.pageSize);
+
+    // Calculate the start and end indexes for the requested page
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+
+    // Slice the products array based on the indexes
+    const paginatedProducts = products.slice(startIndex, endIndex);
+
+    // Calculate the total number of pages
+    res.json({
+      data: paginatedProducts,
+      totalPages: products.length,
+    });
+  } catch (err) {
+    console.log(err, "err");
+    res.status(500).json({
+      error: "something went wrong",
+    });
+  }
+};
+
 exports.UpdateProducts = async (req, res, next) => {
   try {
     let id = req.params.id;

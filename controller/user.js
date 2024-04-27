@@ -13,16 +13,16 @@ exports.CreateUser = async (req, res, next) => {
       return res.json(result);
     } else {
       let mobielNo = req.body.phoneNumber;
-      const phoneNumber = await User.findOne({ phoneNumber : mobielNo });
-      if(phoneNumber) {
+      const phoneNumber = await User.findOne({ phoneNumber: mobielNo });
+      if (phoneNumber) {
         return res.status(404).json({
           error: "Phone Number is allready exist",
         });
       }
 
       let resEmail = req.body.email;
-      const email = await User.findOne({ email : resEmail });
-      if(email) {
+      const email = await User.findOne({ email: resEmail });
+      if (email) {
         return res.status(404).json({
           error: "Email is allready exist",
         });
@@ -44,8 +44,22 @@ exports.CreateUser = async (req, res, next) => {
 exports.GetUser = async (req, res, next) => {
   try {
     const user = await User.find();
+
+    const page = parseInt(req.query.page);
+    const pageSize = parseInt(req.query.pageSize);
+
+    // Calculate the start and end indexes for the requested page
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+
+    // Slice the products array based on the indexes
+    const paginatedUsers = user.slice(startIndex, endIndex);
+
+    // Calculate the total number of pages
+    const totalPages = Math.ceil(user.length / pageSize);
     res.json({
-      data: user,
+      data: paginatedUsers,
+      totalPages,
     });
   } catch (err) {
     res.status(500).json({
@@ -133,7 +147,7 @@ exports.loginUser = async (req, res, next) => {
     const user = await User.findOne({ phoneNumber });
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign(
-        { user_id: user._id, phoneNumber, email : user.email },
+        { user_id: user._id, phoneNumber, email: user.email },
         "hFB4rzSIjqoclVvIANXF5Fj8QWG6GOW6",
         {
           expiresIn: "10h",
@@ -157,7 +171,12 @@ exports.loginUser = async (req, res, next) => {
 exports.registerUser = async (req, res, next) => {
   try {
     const { name, email, password, role, phoneNumber } = req.body;
-    if (!req.body.password && !req.body.name && !req.body.email && !req.body.phoneNumber) {
+    if (
+      !req.body.password &&
+      !req.body.name &&
+      !req.body.email &&
+      !req.body.phoneNumber
+    ) {
       return res.status(400).json({
         message: "Please Enter name, email, phoneNumber and password",
         status_code: 400,
