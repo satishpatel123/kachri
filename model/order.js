@@ -6,23 +6,27 @@ const orderSchema = new Schema({
   products: [
     {
       productId: String,
-      title:String,
-      image:String,
+      title: String,
+      image: String,
       description: String,
       quantity: Number,
       price: Number,
-    }
+    },
   ],
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: "User",
   },
   price: {
-    type: Number
+    type: Number,
   },
   orderDate: {
     type: Date,
-  }
+  },
+  addressId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Address",
+  },
 });
 
 const Cart = mongoose.model("Order", orderSchema);

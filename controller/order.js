@@ -3,7 +3,7 @@ const Address = require("../model/address");
 
 exports.createOrder = async (req, res, next) => {
   try {
-    console.log(req.body, '--req.body')
+    console.log(req.body, "--req.body");
     const newAddress = await Address.create({
       ...req.body.address,
       userId: req.user.user_id,
@@ -13,7 +13,7 @@ exports.createOrder = async (req, res, next) => {
       products: req.body.products,
       price: req.body.total,
       addressId: newAddress._id,
-      orderDate: new Date()
+      orderDate: new Date(),
     });
     res.status(200).json({
       message: "order created successfully",
@@ -94,6 +94,35 @@ exports.getOrders = async (req, res, next) => {
     res.json({
       data: order,
       status: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      error: "something went wrong",
+    });
+  }
+};
+
+exports.getAllOrders = async (req, res, next) => {
+  try {
+    const order = await Order.find()
+      .populate("userId addressId")
+      .sort({ date: -1 });
+
+    const page = parseInt(req.query.page);
+    const pageSize = parseInt(req.query.pageSize);
+
+    // Calculate the start and end indexes for the requested page
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+
+    // Slice the products array based on the indexes
+    const paginatedOrders = order.slice(startIndex, endIndex);
+
+    // Calculate the total number of pages
+    res.json({
+      data: paginatedOrders,
+      totalPages: order.length,
     });
   } catch (err) {
     console.log(err);
