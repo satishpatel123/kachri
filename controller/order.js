@@ -89,8 +89,9 @@ exports.createOrderShipping = async (req, res, next) => {
 
 exports.getOrders = async (req, res, next) => {
   try {
+    console.log(req.user.user_id, '---req.user')
     let userId = req.user.user_id;
-    const order = await Order.find({ user: userId }).sort({ date: -1 });
+    const order = await Order.find({ userId : userId }).sort({ _id: -1 });
     res.json({
       data: order,
       status: true,
