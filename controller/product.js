@@ -146,6 +146,10 @@ exports.getProductId = async (req, res, next) => {
   try {
     let id = req.params.id;
     const products = await Product.findById(id);
+    if(products) {
+      products.image = "https://backend.kachari.in/uploads/" + products.image
+    }
+    console.log(products)
     res.json({
       data: products,
     });
