@@ -26,6 +26,9 @@ const userSchema = new Schema(
     token: {
       type: String,
     },
+    googleId: {
+      type: String,
+    },
   },
   {
     timestamps: true,

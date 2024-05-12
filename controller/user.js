@@ -168,6 +168,66 @@ exports.loginUser = async (req, res, next) => {
   }
 };
 
+exports.socialLogin = async (req, res, next) => {
+  try {
+  
+    const { type, socialId,  } = req.body;
+    let user = "";
+    if (socialId) {
+      user = await User.findOne({ email: req.body.email });
+    }
+    if (user) {
+      if(req.body.name) {
+        user.name = req.body.name;
+      }
+
+      if(socialId) {
+        user.google_id = socialId;
+      }
+      
+      const secretKey = "hFB4rzSIjqoclVvIANXF5Fj8QWG6GOW6" || "";
+      const token = jwt.sign({ user_id: user.id.toString() }, secretKey, {
+        expiresIn: "24h",
+      });
+      
+      await user.save();
+      let userLogin = await User.findOne({
+        id: user.id,
+      });
+      res.status(200).json({
+        message: "User Login has been successfully",
+        token: token,
+        user: userLogin,
+        status: true,
+      });
+    } else {
+      let userCreate = await User.create({
+        name: req.body.name,
+        email: req.body.email,
+        role: "user",
+        google_id: socialId,
+      });
+      console.log(userCreate, '---userCreate')
+      const secretKey = "hFB4rzSIjqoclVvIANXF5Fj8QWG6GOW6" || "";
+      const token = jwt.sign({ user_id: userCreate._id.toString() }, secretKey, {
+        expiresIn: "24h",
+      });
+      let userLogin = await User.findOne({
+        id: userCreate._id,
+      });
+      res.status(200).json({
+        message: "User Login has been successfully",
+        token: token,
+        user: userLogin,
+        status: true,
+      });
+    }
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+};
+
+
 exports.registerUser = async (req, res, next) => {
   try {
     const { name, email, password, role, phoneNumber } = req.body;

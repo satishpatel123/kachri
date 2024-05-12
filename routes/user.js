@@ -10,7 +10,8 @@ const {
   changepassword,
   contactUs,
   forgetpassword,
-  resetPassword
+  resetPassword,
+  socialLogin
 } = require("../controller/user");
 const checkAuth = require('../middleware/auth-check')
 const { Router } = require("express");
@@ -27,5 +28,6 @@ router.post("/changepassword", checkAuth, changepassword);
 router.post("/contactUs", contactUs);
 router.post("/forgetpassword", forgetpassword);
 router.post("/resetPassword/:token", resetPassword);
+router.post("/socialLogin", socialLogin);
 
 module.exports = router;
