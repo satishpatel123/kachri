@@ -837,6 +837,11 @@ mongodb@5.9.1:
   optionalDependencies:
     "@mongodb-js/saslprep" "^1.1.0"
 
+mongoose-intl@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/mongoose-intl/-/mongoose-intl-3.3.0.tgz#280316e36d83329ed1eb4836730a0ad860709825"
+  integrity sha512-6w+A9+zqrfoNjA2j/mAwR2gfduapuM6R/eRU2495tTz683m4acXbF4LzV5FD6y0jJj7qszmLjKJe+g/veFVlfA==
+
 mongoose@^7.6.2:
   version "7.6.10"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-7.6.10.tgz#89ddad48ed2fc548fdfdd40f3b32e7b5fc74e740"

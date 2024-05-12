@@ -36,6 +36,7 @@ exports.CreateProduct = async (req, res, next) => {
 
 exports.GetProducts = async (req, res, next) => {
   try {
+    Product.setDefaultLanguage(req.headers.locale ?? "en");
     const products = await Product.find();
     const productsList = [];
     if (products.length > 0) {
@@ -46,6 +47,7 @@ exports.GetProducts = async (req, res, next) => {
           price: element.price,
           image: "https://backend.kachari.in/uploads/" + element.image,
           _id: element._id,
+          variant: element.variant,
         });
       });
     }
@@ -62,6 +64,7 @@ exports.GetProducts = async (req, res, next) => {
 
 exports.GetAdminProducts = async (req, res, next) => {
   try {
+    Product.setDefaultLanguage(req.query.locale ?? "en");
     const products = await Product.find();
     const productsList = [];
     if (products.length > 0) {
@@ -144,12 +147,12 @@ exports.UpdateProducts = async (req, res, next) => {
 
 exports.getProductId = async (req, res, next) => {
   try {
+    Product.setDefaultLanguage(req.headers.locale ?? "en");
     let id = req.params.id;
     const products = await Product.findById(id);
-    if(products) {
-      products.image = "https://backend.kachari.in/uploads/" + products.image
+    if (products) {
+      products.image = "https://backend.kachari.in/uploads/" + products.image;
     }
-    console.log(products)
     res.json({
       data: products,
     });
