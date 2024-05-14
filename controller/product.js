@@ -37,7 +37,7 @@ exports.CreateProduct = async (req, res, next) => {
 exports.GetProducts = async (req, res, next) => {
   try {
     Product.setDefaultLanguage(req.headers.locale ?? "en");
-    const products = await Product.find();
+    const products = await Product.find().sort({ type : 1});
     const productsList = [];
     if (products.length > 0) {
       products.forEach((element) => {

@@ -29,6 +29,10 @@ const userSchema = new Schema(
     googleId: {
       type: String,
     },
+    authSource: {
+      type: String,
+    }
+      
   },
   {
     timestamps: true,
