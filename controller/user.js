@@ -139,7 +139,6 @@ exports.DeleteUser = async (req, res, next) => {
 
 exports.loginUser = async (req, res, next) => {
   try {
-    console.log(req.body);
     const { phoneNumber, password } = req.body;
     if (!phoneNumber && !password) {
       res.status(400).send("Please enter mobile number and password");
@@ -170,11 +169,11 @@ exports.loginUser = async (req, res, next) => {
 
 exports.socialLogin = async (req, res, next) => {
   try {
-  
-    const { type, socialId,  } = req.body;
+    console.log(req.body, "req.body")
+    const { socialId, name , email} = req.body;
     let user = "";
     if (socialId) {
-      user = await User.findOne({ email: req.body.email });
+      user = await User.findOne({ email: email });
     }
     if (user) {
       if(req.body.name) {
@@ -191,34 +190,27 @@ exports.socialLogin = async (req, res, next) => {
       });
       
       await user.save();
-      let userLogin = await User.findOne({
-        id: user.id,
-      });
       res.status(200).json({
         message: "User Login has been successfully",
         token: token,
-        user: userLogin,
+        user: user,
         status: true,
       });
     } else {
       let userCreate = await User.create({
-        name: req.body.name,
-        email: req.body.email,
+        name: name,
+        email: email,
         role: "user",
-        google_id: socialId,
+        googleId: socialId,
       });
-      console.log(userCreate, '---userCreate')
       const secretKey = "hFB4rzSIjqoclVvIANXF5Fj8QWG6GOW6" || "";
-      const token = jwt.sign({ user_id: userCreate._id.toString() }, secretKey, {
+      const token = jwt.sign({ user_id: userCreate._id.toString(), email: userCreate.email }, secretKey, {
         expiresIn: "24h",
-      });
-      let userLogin = await User.findOne({
-        id: userCreate._id,
       });
       res.status(200).json({
         message: "User Login has been successfully",
         token: token,
-        user: userLogin,
+        user: userCreate,
         status: true,
       });
     }
