@@ -144,20 +144,28 @@ exports.loginUser = async (req, res, next) => {
       res.status(400).send("Please enter mobile number and password");
     }
     const user = await User.findOne({ phoneNumber });
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign(
-        { user_id: user._id, phoneNumber, email: user.email },
-        "hFB4rzSIjqoclVvIANXF5Fj8QWG6GOW6",
-        {
-          expiresIn: "10h",
-        }
-      );
-      return res.status(200).json({
-        data: user,
-        token: token,
-        message: "User has been login successfully ",
+    if(user.password) {
+      if (user && (await bcrypt.compare(password, user.password))) {
+        const token = jwt.sign(
+          { user_id: user._id, phoneNumber, email: user.email },
+          "hFB4rzSIjqoclVvIANXF5Fj8QWG6GOW6",
+          {
+            expiresIn: "10h",
+          }
+        );
+        return res.status(200).json({
+          data: user,
+          token: token,
+          message: "User has been login successfully ",
+        });
+      }
+    } else {
+      return res.status(400).send({
+        message: "You are login another role.",
+        status: false,
       });
     }
+   
     return res.status(400).send({
       message: "Invalid phone number and Password",
       status: false,
@@ -169,7 +177,6 @@ exports.loginUser = async (req, res, next) => {
 
 exports.socialLogin = async (req, res, next) => {
   try {
-    console.log(req.body, "req.body")
     const { socialId, name , email} = req.body;
     let user = "";
     if (socialId) {

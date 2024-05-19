@@ -24,6 +24,9 @@ const productSchema = new Schema(
     variant: {
       type: String,
     },
+    type: {
+      type: String,
+    },
   },
   {
     toJSON: {
