@@ -11,7 +11,8 @@ const {
   contactUs,
   forgetpassword,
   resetPassword,
-  socialLogin
+  socialLogin,
+  mobileUpdate
 } = require("../controller/user");
 const checkAuth = require('../middleware/auth-check')
 const { Router } = require("express");
@@ -26,6 +27,7 @@ router.post("/login", loginUser);
 router.post("/register", registerUser);
 router.post("/changepassword", checkAuth, changepassword);
 router.post("/contactUs", contactUs);
+router.post("/mobileUpdate", checkAuth , mobileUpdate);
 router.post("/forgetpassword", forgetpassword);
 router.post("/resetPassword/:token", resetPassword);
 router.post("/socialLogin", socialLogin);

@@ -386,3 +386,26 @@ exports.resetPassword = async (req, res, next) => {
     });
   }
 };
+
+exports.mobileUpdate = async (req, res, next) => {
+  try {
+    const { mobielNo } = req.body;
+    let existedUser = await User.findById(req.user.user_id);
+    if (!existedUser) {
+      return res.status(404).json({
+        message: "Mobile Number Not Found",
+        status: false,
+      });
+    }
+    existedUser.phoneNumber = mobielNo;
+    await existedUser.save();
+    return res.status(201).json({
+      status: true,
+      message: "Mobile number updated has been successfully",
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "something went wrong",
+    });
+  }
+};
