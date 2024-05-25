@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const addressSchema = new Schema({
-  city: {
+  landmark: {
     type: String,
   },
   name: {
@@ -18,10 +18,19 @@ const addressSchema = new Schema({
   pinCode: {
     type: String,
   },
-  state: {
+  near: {
     type: String,
   },
   address: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  district: {
+    type: String,
+  },
+  taluko: {
     type: String,
   },
   userId: {
