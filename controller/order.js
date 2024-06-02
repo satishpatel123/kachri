@@ -1,4 +1,5 @@
 const Order = require("../model/order");
+const Contact = require("../model/contact");
 const Address = require("../model/address");
 
 exports.createOrder = async (req, res, next) => {
@@ -124,6 +125,33 @@ exports.getAllOrders = async (req, res, next) => {
     res.json({
       data: paginatedOrders,
       totalPages: order.length,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      error: "something went wrong",
+    });
+  }
+};
+
+exports.getContact = async (req, res, next) => {
+  try {
+    const contact = await Contact.find().sort({ date: -1 });
+
+    const page = parseInt(req.query.page);
+    const pageSize = parseInt(req.query.pageSize);
+
+    // Calculate the start and end indexes for the requested page
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+
+    // Slice the products array based on the indexes
+    const paginatedOrders = contact.slice(startIndex, endIndex);
+
+    // Calculate the total number of pages
+    res.json({
+      data: paginatedOrders,
+      totalPages: contact.length,
     });
   } catch (err) {
     console.log(err);
