@@ -43,7 +43,7 @@ exports.CreateUser = async (req, res, next) => {
 
 exports.GetUser = async (req, res, next) => {
   try {
-    const user = await User.find();
+    const user = await User.find().sort({ _id: -1 });
 
     const page = parseInt(req.query.page);
     const pageSize = parseInt(req.query.pageSize);
