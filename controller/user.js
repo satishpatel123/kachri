@@ -411,8 +411,9 @@ exports.mobileUpdate = async (req, res, next) => {
       message: "Mobile number updated has been successfully",
     });
   } catch (err) {
+    console.log(err, '---err----');
     res.status(500).json({
-      message: "something went wrong",
+      message: err.message,
     });
   }
 };
