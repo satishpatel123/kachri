@@ -109,7 +109,7 @@ exports.getAllOrders = async (req, res, next) => {
   try {
     const order = await Order.find()
       .populate("userId addressId")
-      .sort({ date: -1 });
+      .sort({ orderDate: -1 });
 
     const page = parseInt(req.query.page);
     const pageSize = parseInt(req.query.pageSize);
